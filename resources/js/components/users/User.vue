@@ -22,16 +22,16 @@
                             Export
                             <img src="/storage/csv.png" style="width: 30px; height: 30px; cursor: pointer;">
                         </download-excel>
-                            <v-btn slot="activator" color="primary" dark flat @click="openAdd">Add User</v-btn>
-                            <v-btn slot="activator" color="orange" dark flat @click="openDeleted">Deleted Users</v-btn>
-                            <v-tooltip right>
-                                <v-btn icon slot="activator" class="mx-0" @click="getUsers">
-                                    <v-icon color="blue darken-2" small>refresh</v-icon>
-                                </v-btn>
-                                <span>Refresh</span>
-                            </v-tooltip>
-                            <v-spacer></v-spacer>
-                            <v-text-field v-model="search" append-icon="search" label="Search" single-line></v-text-field>
+                        <v-btn slot="activator" color="primary" dark flat @click="openAdd">Add User</v-btn>
+                        <v-btn slot="activator" color="orange" dark flat @click="openDeleted">Deleted Users</v-btn>
+                        <v-tooltip right>
+                            <v-btn icon slot="activator" class="mx-0" @click="getUsers">
+                                <v-icon color="blue darken-2" small>refresh</v-icon>
+                            </v-btn>
+                            <span>Refresh</span>
+                        </v-tooltip>
+                        <v-spacer></v-spacer>
+                        <v-text-field v-model="search" append-icon="search" label="Search" single-line></v-text-field>
                     </v-card-title>
                     <v-data-table :headers="headers" :items="Allusers" class="elevation-1" :loading="loading" :search="search">
                         <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
@@ -46,27 +46,35 @@
                             <td class="text-xs-right">{{ props.item.status }}</td>
                             <td class="justify-center layout px-0">
                                 <v-tooltip bottom v-if="user.can['edit users']">
-                                    <v-btn icon class="mx-0" @click="openEdit(props.item)" slot="activator">
-                                        <v-icon small color="blue darken-2">edit</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon v-on="on" class="mx-0" @click="openEdit(props.item)" slot="activator">
+                                            <v-icon small color="blue darken-2">edit</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>Edit</span>
                                 </v-tooltip>
                                 <v-tooltip bottom v-if="user.can['view users']">
-                                    <v-btn icon class="mx-0" @click="openShow(props.item)" slot="activator">
-                                        <v-icon small color="blue darken-2">visibility</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon v-on="on" class="mx-0" @click="openShow(props.item)" slot="activator">
+                                            <v-icon small color="blue darken-2">visibility</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>View user</span>
                                 </v-tooltip>
                                 <v-tooltip bottom v-if="user.can['edit users']">
-                                    <v-btn icon class="mx-0" @click="openPerm(props.item)" slot="activator">
-                                        <v-icon small color="orange darken-2">dialpad</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon v-on="on" class="mx-0" @click="openPerm(props.item)" slot="activator">
+                                            <v-icon small color="orange darken-2">dialpad</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>Edit Permissions</span>
                                 </v-tooltip>
                                 <v-tooltip bottom v-if="user.can['edit users']">
-                                    <v-btn icon class="mx-0" @click="deleteItem(props.item)" slot="activator">
-                                        <v-icon small color="pink darken-2">delete</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon v-on="on" class="mx-0" @click="deleteItem(props.item)" slot="activator">
+                                            <v-icon small color="pink darken-2">delete</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>Delete</span>
                                 </v-tooltip>
                             </td>

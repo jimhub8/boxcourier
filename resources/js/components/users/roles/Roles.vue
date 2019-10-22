@@ -12,9 +12,11 @@
                         <v-btn @click="openAdd" flat color="primary">Add Roles</v-btn>
                         <!-- <v-spacer></v-spacer> -->
                         <v-tooltip right>
-                            <v-btn icon slot="activator" class="mx-0" @click="getRoles">
-                                <v-icon color="blue darken-2" small>refresh</v-icon>
-                            </v-btn>
+                            <template v-slot:activator="{ on }">
+                                <v-btn v-on="on" icon slot="activator" class="mx-0" @click="getRoles">
+                                    <v-icon color="blue darken-2" small>refresh</v-icon>
+                                </v-btn>
+                            </template>
                             <span>Refresh</span>
                         </v-tooltip>
                         <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
@@ -27,15 +29,19 @@
                             <td class="text-xs-right">{{ props.item.created_at }}</td>
                             <td class="justify-center layout px-0">
                                 <v-tooltip bottom>
-                                    <v-btn slot="activator" icon class="mx-0" @click="openEdit(props.item)">
-                                        <v-icon small color="blue darken-2">edit</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn v-on="on" slot="activator" icon class="mx-0" @click="openEdit(props.item)">
+                                            <v-icon small color="blue darken-2">edit</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>Edit</span>
                                 </v-tooltip>
                                 <v-tooltip bottom>
-                                    <v-btn slot="activator" icon class="mx-0" @click="deleteItem(props.item)">
-                                        <v-icon small color="red darken-2">delete</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn v-on="on" slot="activator" icon class="mx-0" @click="deleteItem(props.item)">
+                                            <v-icon small color="red darken-2">delete</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>delete</span>
                                 </v-tooltip>
                             </td>
@@ -186,15 +192,15 @@ export default {
         this.loader = true
         this.getRoles()
     },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (vm.user.can["view roles"]) {
-        next();
-      } else {
-        next("/unauthorized");
-      }
-    });
-  }
+    beforeRouteEnter(to, from, next) {
+        next(vm => {
+            if (vm.user.can["view roles"]) {
+                next();
+            } else {
+                next("/unauthorized");
+            }
+        });
+    }
 }
 </script>
 

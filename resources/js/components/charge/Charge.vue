@@ -29,9 +29,11 @@
                                 <td class="text-xs-right">{{ props.item.total }}</td>
                                 <td class="justify-center layout px-0">
                                     <v-tooltip bottom>
-                                        <v-btn slot="activator" icon class="mx-0" @click="taskEdit(props.item)">
-                                            <v-icon small color="blue darken-2">edit</v-icon>
-                                        </v-btn>
+                                        <template v-slot:activator="{ on }">
+                                            <v-btn v-on="on" slot="activator" icon class="mx-0" @click="taskEdit(props.item)">
+                                                <v-icon small color="blue darken-2">edit</v-icon>
+                                            </v-btn>
+                                        </template>
                                         <span>Edit</span>
                                     </v-tooltip>
                                 </td>

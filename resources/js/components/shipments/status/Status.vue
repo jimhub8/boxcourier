@@ -96,14 +96,14 @@
                             Export
                             <img src="/storage/csv.png" style="width: 30px; height: 30px; cursor: pointer;">
                         </download-excel>
-                            <v-tooltip right>
-                                <v-btn icon slot="activator" class="mx-0" @click="sortItem">
-                                    <v-icon color="blue darken-2" small>refresh</v-icon>
-                                </v-btn>
-                                <span>Refresh</span>
-                            </v-tooltip>
-                            <v-spacer></v-spacer>
-                            <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+                        <v-tooltip right>
+                            <v-btn icon slot="activator" class="mx-0" @click="sortItem">
+                                <v-icon color="blue darken-2" small>refresh</v-icon>
+                            </v-btn>
+                            <span>Refresh</span>
+                        </v-tooltip>
+                        <v-spacer></v-spacer>
+                        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
                     </v-card-title>
                     <v-data-table :headers="headers" :items="AllShipments" :search="search" counter select-all class="elevation-1" v-model="selected" :loading="loading">
                         <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
@@ -128,15 +128,19 @@
                             <td class="text-xs-right">{{ props.item.speciial_instruction }}</td>
                             <td class="justify-center layout px-0">
                                 <v-tooltip bottom v-if="user.can['update status']">
-                                    <v-btn icon class="mx-0" @click="UpdateItems(props.item)" slot="activator">
-                                        <v-icon color="blue darken-2" dark small>save</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn v-on="on" icon class="mx-0" @click="UpdateItems(props.item)" slot="activator">
+                                            <v-icon color="blue darken-2" dark small>save</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>Update Status</span>
                                 </v-tooltip>
                                 <v-tooltip bottom v-if="user.can['shipment status']">
-                                    <v-btn icon class="mx-0" @click="ShipmentTrack(props.item)" slot="activator">
-                                        <v-icon color="teal darken-2" small>call_split</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn v-on="on" icon class="mx-0" @click="ShipmentTrack(props.item)" slot="activator">
+                                            <v-icon color="teal darken-2" small>call_split</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>View Status</span>
                                 </v-tooltip>
                             </td>

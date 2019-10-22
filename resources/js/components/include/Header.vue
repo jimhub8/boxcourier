@@ -282,28 +282,24 @@
         <v-toolbar dark app :color="color" :clipped-left="$vuetify.breakpoint.lgAndUp" fixed>
             <v-toolbar-title style="width: 600px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <img
-            src="/storage/Boxleo.png"
-            alt
-            style="width: 25%;"
-          >
-        </v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-tooltip bottom style="margin-right: 10px;">
-                    <v-btn icon class="mx-0" @click="openShipment" slot="activator">
-                        <v-icon color="white darken-2" large>add</v-icon>
-                    </v-btn>
-                    <span>Add Shipment</span>
-                </v-tooltip>
-                <v-divider vertical></v-divider>
-                <Notifications :user="user"></Notifications>
-                <v-divider vertical></v-divider>
-                <!-- <chattyNoty :user="user"></chattyNoty> -->
-                <!-- <v-icon @click.stop="right = !right" style="cursor: pointer">apps</v-icon> -->
-                <!-- <form action="/logout" method="post">
+                <img src="/storage/logo/Boxleo.png" alt style="width: 25%;">
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-tooltip bottom style="margin-right: 10px;">
+                <v-btn icon class="mx-0" @click="openShipment" slot="activator">
+                    <v-icon color="white darken-2" large>add</v-icon>
+                </v-btn>
+                <span>Add Shipment</span>
+            </v-tooltip>
+            <v-divider vertical></v-divider>
+            <Notifications :user="user"></Notifications>
+            <v-divider vertical></v-divider>
+            <!-- <chattyNoty :user="user"></chattyNoty> -->
+            <!-- <v-icon @click.stop="right = !right" style="cursor: pointer">apps</v-icon> -->
+            <!-- <form action="/logout" method="post">
                     <v-btn flat color="white" type="submit">Logout</v-btn>
                 </form> -->
-                <Logout :user="user"></Logout>
+            <Logout :user="user"></Logout>
 
         </v-toolbar>
     </v-app>
