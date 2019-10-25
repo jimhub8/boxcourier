@@ -32,6 +32,8 @@ Route::group([
         Route::get('user', 'AuthController@user');
     });
 });
+Route::post('apiSearch/{search}', 'api\ShipmentController@apiSearch')->name('apiSearch');
+Route::resource('status', 'StatusController');
 
 Route::group([
     'middleware' => 'auth:api',
@@ -46,13 +48,11 @@ Route::group([
     Route::resource('companies', 'CompanyController');
     Route::resource('email', 'EmailController');
     Route::resource('invoice', 'InvoiceController');
-	Route::resource('status', 'StatusController');
-	Route::any('/displayReport', 'ReportController@status_reports')->name('status_reports');
+    Route::any('/displayReport', 'ReportController@status_reports')->name('status_reports');
 
     Route::post('addShipments', 'api\ShipmentController@addShipments')->name('addShipments');
 
     Route::post('glSearch', 'api\ShipmentController@glSearch')->name('glSearch');
-    Route::post('apiSearch/{search}', 'api\ShipmentController@apiSearch')->name('apiSearch');
     // Route::get('status/{search}', 'api\ShipmentController@status')->name('status');
 
     Route::post('updateStatus/{id}', 'ShipmentController@updateStatus')->name('updateStatus');
