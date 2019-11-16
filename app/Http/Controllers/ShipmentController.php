@@ -457,6 +457,7 @@ class ShipmentController extends Controller
             $shipment->derivery_date = $request->formobg['derivery_date'];
             $shipment->derivery_time = $request->formobg['derivery_time'];
         } elseif ($request->formobg['status'] == 'Delivered') {
+            $shipment->delivered_on = now();
             $shipment->derivery_date = $request->formobg['derivery_date'];
             $shipment->derivery_time = $request->formobg['derivery_time'];
             $shipment->receiver_id = $request->formobg['receiver_id'];

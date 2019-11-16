@@ -12,7 +12,7 @@
                     <v-spacer></v-spacer>
                     <v-layout wrap>
                         <v-flex sm6>
-                            <v-tooltip bottom v-if="between.start >= 500">
+                            <!-- <v-tooltip bottom v-if="between.start >= 500">
                                 <template v-slot:activator="{ on }">
 
                                     <v-btn v-on="on" icon class="mx-0" @click="previous" slot="activator" style="background: hsla(122, 23%, 60%, 0.31);">
@@ -30,7 +30,9 @@
                                 </template>
                                 <span>Next results</span>
                             </v-tooltip>
-                            From {{ between.start }} to {{ between.end }}
+                            From {{ between.start }} to {{ between.end }} -->
+                            <v-pagination v-model="AllShipments.current_page" :length="AllShipments.last_page" total-visible="5" @input="next()" circle v-if="AllShipments.last_page > 1"></v-pagination>
+
                         </v-flex>
                         <v-flex sm6 id="input-cont">
                             <v-text-field v-model="glsearch.search" append-icon="search" label="Global Search" single-line hide-details @keyup.enter="itemSearch"></v-text-field>
@@ -64,7 +66,7 @@
                         </v-layout>
                     </v-card>
                     <v-card-title>
-                        <download-excel :data="AllShipments" :fields="json_fields">
+                        <download-excel :data="AllShipments.data" :fields="json_fields">
                             Export
                             <img src="/storage/csv.png" style="width: 30px; height: 30px; cursor: pointer;">
                         </download-excel>
@@ -82,7 +84,7 @@
                         <v-spacer></v-spacer>
                         <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
                     </v-card-title>
-                    <v-data-table :headers="headers" :items="AllShipments" :search="search" counter select-all class="elevation-1" v-model="selected" :loading="loading">
+                    <v-data-table :headers="headers" :items="AllShipments.data" :search="search" counter select-all class="elevation-1" v-model="selected" :loading="loading">
                         <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
                         <template slot="items" slot-scope="props">
                             <td>
@@ -109,7 +111,6 @@
                                 <!-- <v-btn color="white" flat @click="notPrinted(props.item)" :loading="nloading" :disabled="nloading">Mark Not Printed</v-btn> -->
                                 <v-tooltip bottom v-if="user.can['edit shipments']">
                                     <template v-slot:activator="{ on }">
-
                                         <v-btn v-on="on" icon class="mx-0" @click="notPrinted(props.item)" slot="activator">
                                             <v-icon color="white darken-2">check_circle</v-icon>
                                         </v-btn>
@@ -121,7 +122,6 @@
                                 <!-- <v-btn color="info" flat @click="printed(props.item)" :loading="ploading" :disabled="ploading">Mark Printed </v-btn> -->
                                 <v-tooltip bottom v-if="user.can['edit shipments']">
                                     <template v-slot:activator="{ on }">
-
                                         <v-btn v-on="on" icon class="mx-0" @click="printed(props.item)" slot="activator">
                                             <v-icon color="blue darken-2">block</v-icon>
                                         </v-btn>
@@ -210,6 +210,7 @@
                                     </template>
                                     <span>Charges</span>
                                 </v-tooltip>
+
                             </td>
                         </template>
                         <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -268,7 +269,6 @@ import mySCharges from "./Charge";
 export default {
     props: ["user", "role"],
     components: {
-        // myRows,
         CreateShipment,
         ShowShipment,
         EditShipment,
@@ -490,12 +490,12 @@ export default {
                 .catch(error => (this.errors = error.response.data.errors));
             console.log(this.coordinatesArr);
             this.updateitedItem = Object.assign({}, item);
-            this.updatedIndex = this.AllShipments.indexOf(item);
+            this.updatedIndex = this.AllShipments.data.indexOf(item);
             this.updateModal = true;
         },
         editItem(item) {
             this.editedItem = Object.assign({}, item);
-            this.editedIndex = this.AllShipments.indexOf(item);
+            this.editedIndex = this.AllShipments.data.indexOf(item);
             // console.log(this.editedItem);
             this.dialog1 = true;
             this.getBranch();
@@ -516,13 +516,13 @@ export default {
         },
         ShipmentTrack(item) {
             this.updateitedItem = Object.assign({}, item);
-            this.editedIndex = this.AllShipments.indexOf(item);
+            this.editedIndex = this.AllShipments.data.indexOf(item);
             this.trackModel = true;
             eventBus.$emit("TrackShipEvent", item);
         },
         Shipcharges(item) {
             this.shipment = Object.assign({}, item);
-            this.editedIndex = this.AllShipments.indexOf(item);
+            this.editedIndex = this.AllShipments.data.indexOf(item);
             this.chargeModal = true;
         },
         openRow() {
@@ -533,7 +533,7 @@ export default {
             this.getCustomer();
         },
         deleteItem(item) {
-            const index = this.AllShipments.indexOf(item);
+            const index = this.AllShipments.data.indexOf(item);
             if (confirm("Are you sure you want to delete this item?")) {
                 axios
                     .delete(`/shipment/${item.id}`)
@@ -541,7 +541,7 @@ export default {
                         this.message = "Deleted";
                         this.color = "black";
                         this.snackbar = true;
-                        this.AllShipments.splice(index, 1);
+                        this.AllShipments.data.splice(index, 1);
                         // console.log(response);
                     })
                     .catch(error => (this.errors = error.response.data.errors));
@@ -549,7 +549,7 @@ export default {
         },
         notPrinted(item) {
             this.editedItem = Object.assign({}, item);
-            this.editedIndex = this.AllShipments.indexOf(item);
+            this.editedIndex = this.AllShipments.data.indexOf(item);
             (this.loading = true),
             axios
                 .post(`/notprinted/${item.id}`)
@@ -560,14 +560,14 @@ export default {
                     this.message = "Not Printed";
                     this.color = "black";
                     this.snackbar = true;
-                    // Object.assign(this.AllShipments[this.editedIndex], this.editedItem)
+                    // Object.assign(this.AllShipments.data[this.editedIndex], this.editedItem)
                     // console.log(response);
                 })
                 .catch(error => (this.errors = error.response.data.errors));
         },
         printed(item) {
             this.editedItem = Object.assign({}, item);
-            this.editedIndex = this.AllShipments.indexOf(item);
+            this.editedIndex = this.AllShipments.data.indexOf(item);
             (this.loading = true),
             axios
                 .post(`/printed/${item.id}`)
@@ -578,14 +578,14 @@ export default {
                     this.message = "Printed";
                     this.color = "black";
                     this.snackbar = true;
-                    // Object.assign(this.AllShipments[this.editedIndex], this.editedItem)
+                    // Object.assign(this.AllShipments.data[this.editedIndex], this.editedItem)
                     // console.log(response);
                 })
                 .catch(error => (this.errors = error.response.data.errors));
         },
         pending(item) {
             this.editedItem = Object.assign({}, item);
-            this.editedIndex = this.AllShipments.indexOf(item);
+            this.editedIndex = this.AllShipments.data.indexOf(item);
             (this.mloading = true),
             axios
                 .post(`/pending/${item.id}`)
@@ -594,7 +594,7 @@ export default {
                     (this.mloading = false), (this.message = "Pending");
                     this.color = "black";
                     this.snackbar = true;
-                    Object.assign(this.AllShipments[this.editedIndex], this.editedItem);
+                    Object.assign(this.AllShipments.data[this.editedIndex], this.editedItem);
                     // console.log(response);
                 })
                 .catch(error => (this.errors = error.response.data.errors));

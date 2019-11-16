@@ -60,6 +60,7 @@ class CreateShipmentsTable extends Migration {
 			$table->string('lat')->nullable();
 			$table->string('lng')->nullable();
 			$table->string('location')->nullable();
+			$table->string('vendor')->nullable();
 			$table->string('lng_to')->nullable();
 			$table->integer('printed')->nullable();
 			$table->text('description')->nullable();
@@ -73,7 +74,7 @@ class CreateShipmentsTable extends Migration {
 			$table->timestamps();
 		});
 	}
-	
+
 	/**
 	 * Reverse the migrations.
 	 *

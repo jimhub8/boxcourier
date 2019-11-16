@@ -11,26 +11,32 @@
                     <v-layout wrap>
                         <v-flex sm6>
                             <v-tooltip bottom v-if="between.start >= 500">
-                                <v-btn icon class="mx-0" @click="previous" slot="activator" style="background: hsla(122, 23%, 60%, 0.31);">
-                                    <v-icon color="blue darken-2">chevron_left</v-icon>
-                                </v-btn>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn icon v-on="on" class="mx-0" @click="previous" slot="activator" style="background: hsla(122, 23%, 60%, 0.31);">
+                                        <v-icon color="blue darken-2">chevron_left</v-icon>
+                                    </v-btn>
+                                </template>
                                 <span>Previous results</span>
                             </v-tooltip>
                             <v-tooltip bottom v-if="callCount > between.end">
-                                <v-btn icon class="mx-0" @click="next" slot="activator" style="background: hsla(122, 23%, 60%, 0.31);">
-                                    <v-icon color="blue darken-2">chevron_right</v-icon>
-                                </v-btn>
-                                <span>Next results</span>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn icon v-on="on" class="mx-0" @click="next" slot="activator" style="background: hsla(122, 23%, 60%, 0.31);">
+                                        <v-icon color="blue darken-2">chevron_right</v-icon>
+                                    </v-btn>
+                                    <span>Next results</span>
+                                </template>
                             </v-tooltip>
                             From {{ between.start }} to {{ between.end }}
                         </v-flex>
-                    </v-layout> 
+                    </v-layout>
                     <v-card-title>
                         Logs
                         <v-tooltip right>
-                            <v-btn icon slot="activator" class="mx-0" @click="getCalls">
-                                <v-icon color="blue darken-2" small>refresh</v-icon>
-                            </v-btn>
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon v-on="on" slot="activator" class="mx-0" @click="getCalls">
+                                    <v-icon color="blue darken-2" small>refresh</v-icon>
+                                </v-btn>
+                            </template>
                             <span>Refresh</span>
                         </v-tooltip>
                         <!-- <v-btn color="primary" raised @click="getCalls">Calls</v-btn> -->
@@ -51,7 +57,8 @@
                         <v-spacer></v-spacer>
                         <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
                     </v-card-title>
-                    <v-data-table :headers="headers" :items="AllCalls" :search="search" counter class="elevation-1">
+                    <v-data-table :headers="headers" :items="AllCalls" :search="search" counter class="elevation-1" :loading="loading">
+                        <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
                         <template slot="items" slot-scope="props">
                             <td>{{ props.item.user_id }}</td>
                             <td class="text-xs-right">{{ props.item.user_name }}</td>
@@ -60,9 +67,11 @@
                             <td class="text-xs-right">{{ props.item.shipment.updated_at }}</td>
                             <td class="justify-center layout px-0">
                                 <v-tooltip bottom>
-                                    <v-btn icon class="mx-0" @click="details(props.item)" slot="activator">
-                                        <v-icon color="info darken-2" small>visibility</v-icon>
-                                    </v-btn>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon v-on="on" class="mx-0" @click="details(props.item)" slot="activator">
+                                            <v-icon color="info darken-2" small>visibility</v-icon>
+                                        </v-btn>
+                                    </template>
                                     <span>Details</span>
                                 </v-tooltip>
                             </td>
@@ -76,7 +85,7 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <v-tooltip right>
-                                <v-btn icon slot="activator" class="mx-0" @click="schedulepct">
+                                <v-btn icon v-on="on" slot="activator" class="mx-0" @click="schedulepct">
                                     <v-icon color="blue darken-2" small>refresh</v-icon>
                                 </v-btn>
                                 <span>Refresh</span>
@@ -190,14 +199,17 @@ export default {
             eventBus.$emit('ShowShipEvent', item);
         },
         getCalls() {
+            this.loading = true
             eventBus.$emit("progressEvent");
             axios.get('/calls')
                 .then((response) => {
+                    this.loading = false
                     eventBus.$emit("StoprogEvent");
                     this.loader = false;
                     this.AllCalls = response.data
                 })
                 .catch((error) => {
+                    this.loading = false
                     eventBus.$emit("StoprogEvent");
                     this.loader = false;
                     this.errors = error.response.data.errors

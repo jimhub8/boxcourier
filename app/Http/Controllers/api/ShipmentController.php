@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ShipmentResource;
+use App\models\AutoGenerate;
 use App\Notifications\ShipmentNoty;
 use App\Pincode;
 use App\Product;
+use App\Rows;
 use App\Shipment;
 use App\User;
 use Illuminate\Http\Request;
@@ -40,61 +42,134 @@ class ShipmentController extends Controller
      */
     public function store(Request $request)
     {
+
+            $row = new Rows();
+            $row->user_id = 1;
+            $row->text = serialize($request->all());
+            $row->save();
+            // return $row;
         // return $request->all();
-        // $api_user = new ApiUser();
-        // $user_data = $api_user->login($request);
-        $user_data = auth('api')->user();
-        $user_id = $user_data->id;
-        // $user_id = !empty($user_data['id']) ? $user_data['id'] : '';
-        // $products = collect($request->form['products'])->transform(function ($product) use ($user_id) {
-        //     $product['total'] = $product['quantity'] * $product['price'];
-        //     $product['user_id'] = $user_id;
-        //     return new Product($product);
-        // });
+        $data = $request->data;
+        // $shipment = new Shipment();
+        // $shipment->description = serialize($data);
+        // $shipment->save();
+        // return response()->json(['success','status' => '200'], '200');
+        // return 'success';
+        // return $data['from']['from_name'];
 
-        // if ($products->isEmpty()) {
-        //     return response()->json([
-        //         'product_empty' => ['One or more products is required'],
-        //     ], 422);
-        // }
+        $products = $data['line_items'];
+        // return $products;
+        $amount_ordered = 0;
+        $total_price = 0;
+        foreach ($products as $product_item) {
+            $amount_ordered += $product_item['quantity'];
+            $total_price += $product_item['total'];
+        }
+        // return($total_price);
+        // return($amount_ordered);
+
+        $from = $data['from'];
+        $to = $data['to'];
+        $recepient = $data['recepient'];
+        $sender = $data['sender'];
+        // $delivery_details = $data['delivery_details'];
+        // dd($from, $to);
+
+        $from_name = $from['from_name'];
+        $from_lat = $from['from_lat'];
+        $from_long = $from['from_long'];
+        $from_description = $from['from_description'];
+
+        $to_name = $to['to_name'];
+        $to_lat = $to['to_lat'];
+        $to_long = $to['to_long'];
+        $to_description = $to['to_description'];
+
+        $recepient_phone = $recepient['recepient_phone'];
+        $recepient_name = $recepient['recepient_name'];
+        $recepient_email = $recepient['recepient_email'];
+        $recepient_notes = $recepient['recepient_notes'];
+
+        $sender_name = $sender['sender_name'];
+        $sender_phone = $sender['sender_phone'];
+        $sender_email = $sender['sender_email'];
+        $sender_notes = $sender['sender_notes'];
+
+        // $pick_up_date = $delivery_details['pick_up_date'];
+
+        // return $request->all();
+        // $user_data = auth('api')->user();
+        $user_id = 1;
         $shipment = new Shipment;
-        // dd($request->data);
-        $shipment->client_id = $user_data->id;
-        $shipment->branch_id = $user_data->branch_id;
-
-        // $shipment->sub_total = $products->sum('total');
-        $shipment->client_name = $request->data['client_name'];
-        $shipment->client_phone = $request->data['client_phone'];
-        $shipment->client_email = $request->data['client_email'];
-        $shipment->client_address = $request->data['client_address'];
-        $shipment->client_city = $request->data['client_city'];
-        $shipment->airway_bill_no = $request->data['bar_code'];
-        $shipment->country_id = $user_data->country_id;
-        $shipment->booking_date = $request->data['booking_date'];
-        $shipment->derivery_date = $request->data['derivery_date'];
-        $shipment->derivery_time = $request->data['derivery_time'];
-        $shipment->bar_code = $request->data['bar_code'];
-        $shipment->to_city = $request->data['to_city'];
-        $shipment->cod_amount = $request->data['cod_amount'];
-        $shipment->from_city = $request->data['from_city'];
+        // $shipment->client_id = 1;
+        // $shipment->branch_id = 1;
+        $shipment->client_name = $recepient_name;
+        $shipment->client_phone = $recepient_phone;
+        $shipment->client_email = $recepient_email;
+        $shipment->client_address = $to_description;
+        // $shipment->client_city = $request->client_city;
+        $shipment->airway_bill_no = $request->airway_bill_no;
+        $shipment->country_id = 1;
+        $shipment->booking_date = now();
+        // $shipment->derivery_date = $pick_up_date;
+        $shipment->printed = false;
+        $shipment->amount_ordered = $amount_ordered;
+        // $shipment->pick_up_date = $pick_up_date;
+        // $shipment->bar_code = $request->bar_code;
+        $shipment->to_city = $to_name;
+        $shipment->client_city = $to_name;
+        $shipment->cod_amount = $request->cod_amount;
+        $shipment->from_city = $from_name;
+        $shipment->sender_city = $from_name;
         $shipment->user_id = $user_id;
+        $shipment->vendor = $from_name;
 
-        $shipment->sender_name = $user_data->name;
-        $shipment->sender_email = $user_data->email;
-        $shipment->sender_phone = $user_data->phone;
-        $shipment->sender_address = $user_data->address;
-        $shipment->sender_city = $user_data->city;
+        // $bar_code = new AutoGenerate;
+        // $shipment->bar_code = $bar_code->airwaybill_no();
+        // $shipment->airway_bill_no = $bar_code->airwaybill_no();
+
+
+        $shipment->bar_code = 'BL_001';
+        $shipment->airway_bill_no = 'BL_001';
+
+        $shipment->sender_name = $sender_name;
+        $shipment->sender_email = $sender_email;
+        $shipment->sender_phone = $sender_phone;
+
+        // $shipment->lat = $from_lat;
+        // $shipment->lng = $from_long;
+        $shipment->lng_to = $to_long;
+        $shipment->lat_to = $to_lat;
+        // $total_price
+        $shipment->cod_amount = $total_price;
+        // $shipment->sender_address = $sender_address;
+        // $shipment->sender_city = $sender_city;
 
         // return $user_id;
         $shipment->shipment_id = random_int(1000000, 9999999);
         $shipment->save();
+
+
+        foreach ($products as $product_item) {
+            $product = new Product();
+            $product->lat_from = $product_item['from_lat'];
+            $product->long_from = $product_item['from_long'];
+            $product->product_name = $product_item['name'];
+            // $product->weight = $product_item['weight'];
+            $product->price = $product_item['price'];
+            $product->total = $product_item['total'];
+            $product->quantity = $product_item['quantity'];
+            $product->user_id = 1;
+            $product->shipments_id = $shipment->id;
+            $product->save();
+        }
+
+
         $users = $this->getAdmin();
         $type = 'shipment';
         Notification::send($users, new ShipmentNoty($shipment, $type));
         return response()->json(['success' => $shipment, 'status' => '200'], '200');
         // return ShipmentResource::collection($shipment);
-
-        return response()->json(['success' => $shipment, 'status' => '200'], '200');
         // die();
     }
 

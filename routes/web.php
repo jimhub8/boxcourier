@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth']], function () {
 		return view('referral');
 	});
 	// Route::get('/referral', 'HomeController@referral')->name('referral');
+	Route::get('/woo_orders', 'WoocommerceController@woo_orders')->name('woo_orders');
 
 
 	Route::get('/logoutOther', 'UserController@logoutOther')->name('logoutOther');

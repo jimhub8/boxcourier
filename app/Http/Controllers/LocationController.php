@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use Illuminate\Http\Request;
 use App\Shipment;
 
@@ -32,24 +33,41 @@ class LocationController extends Controller
         return $shipment;
     }
 	public function getcoordinatesArray($id) {
-         $coodinates = Shipment::select('lat', 'lat_to', 'lng', 'lng_to')->find($id);
+         $product = Product::select('shipments_id', 'lat_from', 'long_from')->find($id);
+         $shipment = Shipment::select('lat', 'lat_to', 'lng', 'lng_to')->find($product->shipments_id);
+        //  $coodinates = Shipment::select('lat', 'lat_to', 'lng', 'lng_to')->find($id);
         //  $position = [];
         //  $num = "3.14";
         //  $float = (float)$num;
-         $position = array('lat' => (float)$coodinates->lat , 'lng' => (float)$coodinates->lng); 
-         $position_to = array('lat' => (float)$coodinates->lat_to , 'lng' => (float)$coodinates->lng_to);
+        //  $position = array('lat' => (float)$coodinates->lat , 'lng' => (float)$coodinates->lng);
+        //  $position = array                                                                                                                               ('lat' => (float)$coodinates->lat , 'lng' => (float)$coodinates->lng);
+        //  $position_to = array('lat' => (float)$coodinates->lat_to , 'lng' => (float)$coodinates->lng_to);
+        //  $merge_to = array('position' =>$position_to);
+        //  $merge = array('position' => $position);
+        //  $merge_arr = [];
+        // //  array_merge($merge, $merge_to);
+        //  for ($i=0; $i < 1; $i++) {
+        //     $merge_arr[] = $merge_to;
+        //     $merge_arr[] = $merge;
+        //  }
+        //  return $merge_arr;
+            // return($product);
+        $position = array('lat' => (float)$product->lat_from , 'lng' => (float)$product->long_from, 'lable' => 'vendor');
+         $position_to = array('lat' => (float)$shipment->lat_to , 'lng' => (float)$shipment->lng_to, 'lable' => 'client');
+        //  dd($position, $position_to);
          $merge_to = array('position' =>$position_to);
          $merge = array('position' => $position);
          $merge_arr = [];
         //  array_merge($merge, $merge_to);
-         for ($i=0; $i < 1; $i++) { 
+         for ($i=0; $i < 1; $i++) {
             $merge_arr[] = $merge_to;
             $merge_arr[] = $merge;
          }
          return $merge_arr;
+
 		// $marker = $re
     }
-    
+
     public function paid(Request $request, $id)
     {
         // return $request->all();

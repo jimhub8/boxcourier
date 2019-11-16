@@ -10,7 +10,8 @@
                     <v-list-tile-avatar>
                         <!-- <avatar :username="user.name" style="font-size: 40px;margin: auto;padding: 50px;"></avatar> -->
                         <!-- <avatar :username="user.name" style="font-size: 20px;margin: auto;padding: 0px;"></avatar> -->
-                        <img :src="user.profile" alt="John" />
+                        <avatar :username="user.name" style="font-size: 20px;margin: auto;padding: 0px;"></avatar>
+                        <!-- <img :src="user.profile" alt="John" /> -->
                     </v-list-tile-avatar>
 
                     <v-list-tile-content>
@@ -63,10 +64,11 @@
 </template>
 
 <script>
+import Avatar from "vue-avatar";
 export default {
     props: ["user"],
-    computed: {
-        // Avatar
+    components: {
+        Avatar
     },
     data() {
         return {
@@ -82,8 +84,9 @@ export default {
 </script>
 
 <style scoped>
-/* .v-menu--inline {
-    margin-top: -60px;
-    float: right;
-} */
+
+.v-avatar {
+    height: 40px !important;
+    width: 60px !important;
+}
 </style>

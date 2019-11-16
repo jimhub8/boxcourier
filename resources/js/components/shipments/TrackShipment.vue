@@ -42,7 +42,35 @@
                 <!-- <v-toolbar card style="background: #3490dc; color: #fff;" darken-1>
                     <v-toolbar-title class="body-2">Product Details</v-toolbar-title>
                 </v-toolbar> -->
-                <table class="table table-hover table-striped">
+
+                <table class="table table-hover table-striped" v-if="shipments.products.length > 0">
+                    <thead>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="prods in shipments.products" :key="prods.id">
+                            <td>{{ prods.product_name }}</td>
+                            <td>{{ prods.price }}</td>
+                            <td>{{ prods.quantity }}</td>
+                            <td>{{ parseInt( prods.price) * parseInt(prods.quantity) }}</td>
+                            <td>
+                                <v-tooltip bottom v-if="user.can['update charges']">
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn v-on="on" icon class="mx-0" @click="openMap(prods)" slot="activator">
+                                            <v-icon color="indigo darken-2" small>map</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Map</span>
+                                </v-tooltip>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-hover table-striped" v-else>
                     <thead>
                         <th>Waybill Status</th>
                         <th>Receiver Name</th>
@@ -168,6 +196,7 @@
             </v-card-actions>
             <v-divider></v-divider>
             <v-divider></v-divider>
+            <myMaps></myMaps>
         </v-card>
     </v-dialog>
 </div>
@@ -175,9 +204,11 @@
 
 <script>
 import VueBarcode from "vue-barcode";
+import myMaps from './maps'
 export default {
     props: ["shipments", "OpenTrackBranch", 'user'],
     components: {
+        myMaps,
         barcode: VueBarcode
     },
     data() {
@@ -196,6 +227,10 @@ export default {
         },
         close() {
             this.$emit("closeRequest");
+        },
+        openMap(data) {
+            console.log(data);
+            eventBus.$emit('mapEvent', data)
         },
         trackShip(data) {
             axios.post(`/getshipD/${data.id}`)

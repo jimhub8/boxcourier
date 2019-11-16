@@ -169,7 +169,7 @@ return [
 
         \Safaricom\Mpesa\MpesaServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
-
+        Pixelpeter\Woocommerce\WoocommerceServiceProvider::class,
 
     ],
 
@@ -227,7 +227,9 @@ return [
         // 'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
         // 'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
-        'Mpesa'=> \Safaricom\Mpesa\MpesaServiceProvider::class
+        'Mpesa'=> \Safaricom\Mpesa\MpesaServiceProvider::class,
+        'Woocommerce' => Pixelpeter\Woocommerce\Facades\Woocommerce::class,
+
     ],
 
 ];

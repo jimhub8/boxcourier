@@ -34,9 +34,10 @@ Route::group([
 });
 Route::post('apiSearch/{search}', 'api\ShipmentController@apiSearch')->name('apiSearch');
 Route::resource('status', 'StatusController');
+Route::any('/woocommerce', 'WoocommerceController@woocommerce')->name('woocommerce');
 
 Route::group([
-    'middleware' => 'auth:api',
+    // 'middleware' => 'auth:api',
 ], function () {
     Route::resource('users', 'UserController');
     Route::resource('roles', 'RoleController');
