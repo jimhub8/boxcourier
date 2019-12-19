@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\FileManagement\Props;
-use App\FileManagement\Repositories\Attachment\AttachmentRepository;
-use Auth;
-use Exception;
-use App\AttachmentCategory;
-use App\Attachment;
-use App\User;
-use App\Company;
 use Spatie\Permission\Models\Permission;
 use App\Country;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    public function __construct()
+{
+$this->middleware(['auth', '2fa'] );
+}
+
     public function courier()
     {
         $permissions = [];
@@ -46,9 +44,9 @@ class HomeController extends Controller
 
     /**
      * Load homepage
-     * 
-     * @param  Request $request 
-     * @return view           
+     *
+     * @param  Request $request
+     * @return view
      */
     public function index(Request $request)
     {

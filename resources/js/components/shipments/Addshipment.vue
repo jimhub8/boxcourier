@@ -128,7 +128,7 @@
                                         </div>
                                     </v-flex>
                                     <v-flex sm6>
-                                        <h3><b>Deriver To</b></h3>
+                                        <h3><b>Deliver To</b></h3>
                                         <v-divider></v-divider>
                                         <v-layout wrap>
                                             <v-flex xs6 sm6>
@@ -240,7 +240,7 @@
                                                     <!-- </div>  -->
                                                     <div class="form-group col-md-4">
                                                         <div v-if="client_role != 'isClient'">
-                                                            <label for="payment" class="col-md-4 col-form-label text-md-right">Paid</label>
+                                                            <label for="payment" class="col-md-12 col-form-label text-md-right">Paid</label>
                                                             <select class="custom-select" v-model="form.payment">
                                                             <option value="yes">Yes</option>
                                                             <option value="no">No</option>

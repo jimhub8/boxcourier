@@ -130,7 +130,7 @@ export default {
           // console.log(response);
           this.$parent.Allusers.push(response.data);
           this.close();
-          // this.resetForm();
+          this.resetForm();
           this.$emit("alertRequest");
         })
         .catch(error => {

@@ -94,5 +94,10 @@ class User extends Authenticatable
 		return ReferralProgram::all()->map(function ($program) {
 			return ReferralLink::getReferral($this, $program);
 		});
-	}
+    }
+
+    public function passwordSecurity()
+    {
+        return $this->hasOne('App\models\PasswordSecurity');
+    }
 }

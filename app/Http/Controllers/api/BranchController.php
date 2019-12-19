@@ -6,6 +6,7 @@ use App\Branch;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BranchResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
 {
@@ -93,7 +94,7 @@ class BranchController extends Controller
      */
     public function getBranch()
     {
-        $branch = Branch::where('country_id', Auth::id())->get();
+        $branch = Branch::where('country_id', Auth::user()->country_id)->get();
         return BranchResource::collection($branch);
     }
 

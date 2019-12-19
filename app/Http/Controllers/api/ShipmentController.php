@@ -68,21 +68,22 @@ class ShipmentController extends Controller
         // return($total_price);
         // return($amount_ordered);
 
-        $from = $data['from'];
+        // $from = $data['from'];
         $to = $data['to'];
         $recepient = $data['recepient'];
         $sender = $data['sender'];
         // $delivery_details = $data['delivery_details'];
         // dd($from, $to);
 
-        $from_name = $from['from_name'];
-        $from_lat = $from['from_lat'];
-        $from_long = $from['from_long'];
-        $from_description = $from['from_description'];
+        // $from_name = $from['from_name'];
+        // $from_lat = $from['from_lat'];
+        // $from_long = $from['from_long'];
+        // $from_description = $from['from_description'];
 
         $to_name = $to['to_name'];
-        $to_lat = $to['to_lat'];
-        $to_long = $to['to_long'];
+        $to_lat = (array_key_exists('to_lat', $to)) ? $to['to_lat'] : null;
+        $to_long = (array_key_exists('to_long', $to)) ? $to['to_long'] : null;
+        // $to_long = $to['to_long'];
         $to_description = $to['to_description'];
 
         $recepient_phone = $recepient['recepient_phone'];
@@ -119,10 +120,10 @@ class ShipmentController extends Controller
         $shipment->to_city = $to_name;
         $shipment->client_city = $to_name;
         $shipment->cod_amount = $request->cod_amount;
-        $shipment->from_city = $from_name;
-        $shipment->sender_city = $from_name;
+        // $shipment->from_city = $from_name;
+        // $shipment->sender_city = $from_name;
         $shipment->user_id = $user_id;
-        $shipment->vendor = $from_name;
+        // $shipment->vendor = $from_name;
 
         // $bar_code = new AutoGenerate;
         // $shipment->bar_code = $bar_code->airwaybill_no();
@@ -149,13 +150,12 @@ class ShipmentController extends Controller
         $shipment->shipment_id = random_int(1000000, 9999999);
         $shipment->save();
 
-
         foreach ($products as $product_item) {
             $product = new Product();
             $product->lat_from = $product_item['from_lat'];
             $product->long_from = $product_item['from_long'];
             $product->product_name = $product_item['name'];
-            // $product->weight = $product_item['weight'];
+            $product->vendor = $product_item['from_name'];
             $product->price = $product_item['price'];
             $product->total = $product_item['total'];
             $product->quantity = $product_item['quantity'];
@@ -164,11 +164,10 @@ class ShipmentController extends Controller
             $product->save();
         }
 
-
-        $users = $this->getAdmin();
-        $type = 'shipment';
-        Notification::send($users, new ShipmentNoty($shipment, $type));
-        return response()->json(['success' => $shipment, 'status' => '200'], '200');
+        // $users = $this->getAdmin();
+        // $type = 'shipment';
+        // Notification::send($users, new ShipmentNoty($shipment, $type));
+        return response()->json(['success', 'status' => '200'], '200');
         // return ShipmentResource::collection($shipment);
         // die();
     }

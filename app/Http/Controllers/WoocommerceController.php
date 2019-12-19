@@ -20,6 +20,8 @@ class WoocommerceController extends Controller
 {
     public function woocommerce(Request $request)
     {
+        Log::debug($request->all());
+    return;
         if ($request->id) {
             Log::debug($request->all());
             // $row = new Rows();
@@ -101,11 +103,11 @@ class WoocommerceController extends Controller
 
     public function woo_orders()
     {
-        $rows = Rows::all();
-        foreach ($rows as $row) {
-            $id = (unserialize($row->text));
+        $rows = Rows::select('text')->latest()->first();
+        // foreach ($rows as $row) {
+            $id = (unserialize($rows->text));
             dd($id);
-        }
+        // }
 
         // return Woocommerce::get('orders');
     }

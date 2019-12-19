@@ -20,6 +20,9 @@ class CreateProductsTable extends Migration {
 			$table->integer('quantity');
 			$table->integer('user_id');
 			$table->integer('branch_id')->nullable();
+			$table->string('lat_from')->nullable();
+			$table->string('long_from')->nullable();
+			$table->string('vendor')->nullable();
 			$table->integer('shipments_id');
 			$table->softDeletes();
 			$table->timestamps();

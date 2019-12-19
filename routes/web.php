@@ -16,6 +16,14 @@ use Illuminate\Support\Carbon;
 // 	\Illuminate\Support\Facades\Artisan::call('notifications:SchedueledShipment');
 //  });
 
+// Route::get('/complete-registration', 'Auth\RegisterController@completeRegistration');
+Route::get('/2fa','PasswordSecurityController@show2faForm');
+Route::post('/generate2faSecret','PasswordSecurityController@generate2faSecret')->name('generate2faSecret');
+Route::post('/2fa','PasswordSecurityController@enable2fa')->name('enable2fa');
+Route::post('/disable2fa','PasswordSecurityController@disable2fa')->name('disable2fa');
+
+
+
 // M-pesa
 Route::any('confirmation', 'SafaricomController@confirmation')->name('confirmation');
 Route::any('register_url', 'SafaricomController@register_url')->name('register_url');

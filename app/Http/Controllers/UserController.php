@@ -62,12 +62,13 @@ class UserController extends Controller
         $user->city = $request->city;
         $user->country_id = $request->countryList;
         $user->activation_token = str_random(60);
-        $user->save();
+        // $user->save();
         $user->assignRole($request->role_id);
         $user->givePermissionTo($request->selected);
         $user->notify(new SignupActivate($user, $password));
         return $user;
     }
+
     public function generateRandomString($length = 10)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
