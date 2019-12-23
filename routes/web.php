@@ -1,7 +1,9 @@
 <?php
 use App\Shipment;
 use Illuminate\Support\Carbon;
-
+if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
+    error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+}
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,11 +18,18 @@ use Illuminate\Support\Carbon;
 // 	\Illuminate\Support\Facades\Artisan::call('notifications:SchedueledShipment');
 //  });
 
+
+
+Route::get('/2fa/enable', 'Google2FAController@enableTwoFactor');
+Route::get('/2fa/disable', 'Google2FAController@disableTwoFactor');
+Route::get('/2fa/validate', 'Auth\LoginController@getValidateToken');
+Route::post('/2fa/validate', ['middleware' => 'throttle:5', 'uses' => 'Auth\LoginController@postValidateToken']);
+
 // Route::get('/complete-registration', 'Auth\RegisterController@completeRegistration');
-Route::get('/2fa','PasswordSecurityController@show2faForm');
-Route::post('/generate2faSecret','PasswordSecurityController@generate2faSecret')->name('generate2faSecret');
-Route::post('/2fa','PasswordSecurityController@enable2fa')->name('enable2fa');
-Route::post('/disable2fa','PasswordSecurityController@disable2fa')->name('disable2fa');
+// Route::get('/2fa','PasswordSecurityController@show2faForm');
+// Route::post('/generate2faSecret','PasswordSecurityController@generate2faSecret')->name('generate2faSecret');
+// Route::post('/2fa','PasswordSecurityController@enable2fa')->name('enable2fa');
+// Route::post('/disable2fa','PasswordSecurityController@disable2fa')->name('disable2fa');
 
 
 

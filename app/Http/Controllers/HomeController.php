@@ -52,9 +52,10 @@ $this->middleware(['auth', '2fa'] );
     {
         // $props = Props::get();
         // return redirect('/login');
-        if (Auth::check()) {
-            return redirect('/courier');
-        }
+        // if (Auth::check()) {
+        //     return redirect('/courier');
+        // }
+        return view('home');
     }
 
     public function referral()

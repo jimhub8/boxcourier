@@ -8,18 +8,13 @@
                 <div class="card-header">Home</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                            <a href="/login" class="btn btn-primary ">Login</a>
-                        </div>
+                    @if (Auth::user()->google2fa_secret)
+                    <a href="{{ url('2fa/disable') }}" class="btn btn-warning">Disable 2FA</a>
+                    @else
+                    <a href="{{ url('2fa/enable') }}" class="btn btn-primary">Enable 2FA</a>
                     @endif
-                    Welcome {{ Auth::user()->name }} to our app
-                        <br>
-                <a href="/courier" class="btn btn-primary">Go to the app</a>
                 </div>
             </div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum commodi qui perferendis ea praesentium enim, vero, nobis illo nihil tenetur eaque dolorum eos officiis! Suscipit unde impedit sequi accusamus debitis?
         </div>
     </div>
 </div>

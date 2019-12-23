@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use App\models\PasswordSecurity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PasswordSecurityController extends Controller
 {
     public function show2faForm(Request $request){
         $user = Auth::user();
-        // dd($user);
 
         $google2fa_url = "";
+        // dd($user->passwordSecurity());
         if($user->passwordSecurity()->exists()){
+        // dd($user->passwordSecurity->google2fa_secret, $user->email);
             $google2fa = app('pragmarx.google2fa');
+            // dd($google2fa);
             $google2fa_url = $google2fa->getQRCodeGoogleUrl(
-                '5Balloons 2A DEMO',
+                'Courier',
                 $user->email,
                 $user->passwordSecurity->google2fa_secret
             );
